@@ -1,6 +1,9 @@
 import { Button } from "baseui/button";
-import { Input } from "baseui/input";
-
+import { useSignIn } from "react-auth-kit";
+import { useFormik } from "formik";
+import axios, { AxiosError } from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   ErrorText,
@@ -9,15 +12,10 @@ import {
   StyledInput,
 } from "../commons";
 
-import { useSignIn } from "react-auth-kit";
-import { useFormik } from "formik";
-import axios, { AxiosError } from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 function Login(props: any) {
   const [error, setError] = useState("");
   const signIn = useSignIn();
+  const navigate = useNavigate();
 
   const onSubmit = async (values: any) => {
     console.log("Values: ", values);
@@ -25,7 +23,7 @@ function Login(props: any) {
 
     try {
       const response = await axios.post(
-        "http://localhost:9000/api/v1/login",
+        "http://127.0.0.1:5000/api/login",
         values
       );
 
@@ -35,6 +33,7 @@ function Login(props: any) {
         tokenType: "Bearer",
         authState: { email: values.email },
       });
+      navigate("/");
     } catch (err) {
       if (err && err instanceof AxiosError)
         setError(err.response?.data.message);
@@ -57,7 +56,7 @@ function Login(props: any) {
       <InnerContainer>
         <form onSubmit={formik.handleSubmit}>
           <h1 style={{ color: "white" }}>Enter Provider Login</h1>
-          <ErrorText>{error}</ErrorText>
+          <br></br>
           <InputWrapper>
             <StyledInput
               name="providerID"
@@ -72,19 +71,31 @@ function Login(props: any) {
           <InputWrapper>
             <StyledInput
               name="password"
+              type="password"
               value={formik.values.password}
               onChange={formik.handleChange}
               placeholder="Password"
               clearOnEscape
               size="large"
-              type="text"
+              overrides={{
+                MaskToggleButton: () => null,
+              }}
             />
           </InputWrapper>
           <InputWrapper>
-            <Button size="large" kind="primary" isLoading={formik.isSubmitting}>
+            <Button size="large" kind="primary">
               Login
             </Button>
           </InputWrapper>
+          <br></br>
+          {error ? (
+            <ErrorText>{error}</ErrorText>
+          ) : (
+            <>
+              <br></br>
+              <br></br>
+            </>
+          )}
         </form>
       </InnerContainer>
     </Container>

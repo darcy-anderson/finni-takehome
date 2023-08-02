@@ -3,11 +3,17 @@ import { useState } from "react";
 interface Props {
   patients: any[];
   onSelectPatient: (patientID: number) => void;
+  onSelectPage: (pageNo: number) => void;
   noOfPages: number;
 }
 
-function PatientTable({ patients, onSelectPatient, noOfPages }: Props) {
-  const [selectedIndex, setSelectedIndex] = useState(1);
+function PatientTable({
+  patients,
+  onSelectPatient,
+  onSelectPage,
+  noOfPages,
+}: Props) {
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   let pages = [];
   for (let i = 1; i <= noOfPages; i++) {
@@ -46,23 +52,19 @@ function PatientTable({ patients, onSelectPatient, noOfPages }: Props) {
 
       <nav aria-label="Page navigation">
         <ul className="pagination justify-content-center">
-          <li className="page-item" key="prev">
-            <a className="page-link" href="#">
-              Previous
-            </a>
-          </li>
           {pages.map((pageNo) => (
-            <li className="page-item" key={pageNo}>
-              <a className="page-link" href="#">
-                {pageNo}
-              </a>
+            <li
+              className="page-item"
+              key={pageNo}
+              role="button"
+              onClick={() => {
+                onSelectPage(pageNo);
+                setSelectedIndex(-1);
+              }}
+            >
+              <a className="page-link">{pageNo}</a>
             </li>
           ))}
-          <li className="page-item" key="next">
-            <a className="page-link" href="#">
-              Next
-            </a>
-          </li>
         </ul>
       </nav>
     </>

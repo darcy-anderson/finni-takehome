@@ -16,13 +16,14 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Dashboard />} />
-
-          {/* element={
-            <RequireAuth loginPath="/login">
-              <Home />
-            </RequireAuth>
-          } */}
+          <Route
+            path="/"
+            element={
+              <RequireAuth loginPath="/login">
+                <Dashboard />
+              </RequireAuth>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>

@@ -1,10 +1,11 @@
 import fox from "../../fox.svg";
-import { useSignOut } from "react-auth-kit";
+import { useSignOut, useIsAuthenticated } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
   const signOut = useSignOut();
+  const auth = useIsAuthenticated();
 
   const logOut = () => {
     signOut();
@@ -24,9 +25,13 @@ function Navbar() {
         <div className="collapse navbar-collapse px-3" id="navbarText">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item active">
-              <a className="nav-link" onClick={logOut}>
-                Log Out
-              </a>
+              {auth() ? (
+                <a className="nav-link" role="button" onClick={logOut}>
+                  Log Out
+                </a>
+              ) : (
+                <a> </a>
+              )}
             </li>
           </ul>
         </div>

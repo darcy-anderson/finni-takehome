@@ -35,7 +35,9 @@ export const StyledInput = styled(Input)`
 `;
 
 export const ErrorText = styled.span`
+  display: flex;
   color: #eb5d5d;
+  justify-content: center;
   font-size: 18px;
   margin: 7px 0;
 `;
