@@ -4,6 +4,8 @@ import Details from "./Details";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+// Full page component with two panes displaying full patient list and specific
+// patient details
 function Dashboard() {
   const [patients, setPatients] = useState([]);
   const [noOfPages, setPages] = useState(1);
@@ -14,8 +16,8 @@ function Dashboard() {
   const [sortField, setSortField] = useState("patientID");
   const [sortOrder, setSortOrder] = useState(1);
 
+  // Request all patients meeting selected criteria
   useEffect(() => {
-    // Make a request for all patients meeting search term
     axios
       .get(
         `http://127.0.0.1:5000/api/patients?page=${selectedPageNo}&search=${searchTerm}&field=${sortField}&order=${sortOrder}`,
@@ -35,10 +37,13 @@ function Dashboard() {
   return (
     <div className="container-fluid p-0">
       <div className="row gx-0">
+        {/*/ Left-side pane for displaying table of patient details */}
         <div className="col-sm">
+          {/*/ Search and sorting toolbar */}
           <div className="row">
             <div className="container-fluid">
               <div className="row m-2">
+                {/*/ Search box and submit button */}
                 <div className="col-sm-4 gx-0">
                   <div className="input-group rounded">
                     <input
@@ -65,6 +70,8 @@ function Dashboard() {
                     </span>
                   </div>
                 </div>
+
+                {/*/ Sorting options */}
                 <div className="col-sm-8 px-5 d-flex align-items-center">
                   <b className="text-nowrap">Sort by:</b>
                   <select
@@ -92,6 +99,9 @@ function Dashboard() {
               </div>
             </div>
           </div>
+          {/*/ End of search and sorting toolbar */}
+
+          {/*/ Table for displaying current page of patient details */}
           <div className="row gx-0">
             <PatientTable
               patients={patients}
@@ -105,7 +115,9 @@ function Dashboard() {
             />
           </div>
         </div>
+        {/*/ End of left-side pane */}
 
+        {/*/ Right-side pane for single patient details */}
         <div className="col-sm gx-5">
           <Details patientID={selectedPatientID} />
         </div>

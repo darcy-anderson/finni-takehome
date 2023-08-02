@@ -31,10 +31,11 @@ type NewPatient = {
   newFields?: FieldValuePair[];
 };
 
+// Display all details for one patient. Second tab allows entry of new patient.
 function Details({ patientID }: Props) {
-  // Patient Details tab OR New Patient tab selected
-  const [selectedTab, setSelectedTab] = useState(1);
+  const [selectedTab, setSelectedTab] = useState(1); // Track if existing or new patient tab is selected
   const [patient, setPatient] = useState<Patient>({
+    // Currently entered patient data
     patientID: 0,
     firstName: "",
     middleName: "",
@@ -44,6 +45,7 @@ function Details({ patientID }: Props) {
     addresses: [],
   });
   const [fields, setFields] = useState<string[]>([
+    // List of all fields
     "patientID",
     "firstName",
     "middleName",
@@ -52,10 +54,11 @@ function Details({ patientID }: Props) {
     "dob",
     "addresses",
   ]);
-  const [extraFields, setExtraFields] = useState<string[]>([]);
-  const [newFields, setNewFields] = useState<string>("");
-  const [changes, setChanges] = useState(false);
+  const [extraFields, setExtraFields] = useState<string[]>([]); // List of non-basic fields
+  const [newFields, setNewFields] = useState<string>(""); // Current state of new field text area
+  const [changes, setChanges] = useState(false); // Display submit button only when changes made
   const [newPatient, setNewPatient] = useState<NewPatient>({
+    // Currently entered new patient data
     firstName: "",
     middleName: "",
     lastName: "",
@@ -63,8 +66,9 @@ function Details({ patientID }: Props) {
     dob: "",
     addresses: [],
   });
-  const [newPatientNewFields, setNewPatientNewFields] = useState<string>("");
+  const [newPatientNewFields, setNewPatientNewFields] = useState<string>(""); // Current state of new field text area for new patient tab
 
+  // Request details for selected patient, and request field list
   useEffect(() => {
     if (patientID != -1) {
       axios
@@ -106,6 +110,7 @@ function Details({ patientID }: Props) {
       });
   }, [patientID]);
 
+  // Process changes in existing patient details form
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChanges(true);
     setPatient({
@@ -165,6 +170,7 @@ function Details({ patientID }: Props) {
       });
   };
 
+  // Send delete request for specific patient
   const handleDelete = () => {
     axios
       .delete(`http://127.0.0.1:5000/api/patients/${patientID}`)
@@ -181,6 +187,7 @@ function Details({ patientID }: Props) {
       });
   };
 
+  // Process changes in new patient details form
   const handleNewPatientChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -207,6 +214,7 @@ function Details({ patientID }: Props) {
   };
 
   const handleNewPatientFormSubmit = () => {
+    // Format new patient data
     const fieldLines = newPatientNewFields.split("\n");
     const newFieldPairs: FieldValuePair[] = fieldLines.map((line) => {
       const [field, value] = line.split(": ");
@@ -219,6 +227,8 @@ function Details({ patientID }: Props) {
         : newFieldPairs,
     };
     const newFieldNames = newFieldPairs.map((pair) => pair.field);
+
+    // Clear form
     setNewPatient({
       firstName: "",
       middleName: "",
@@ -229,7 +239,7 @@ function Details({ patientID }: Props) {
     });
     setNewPatientNewFields("");
 
-    // Send post request to create new patient
+    // Send post request to create new patient and update new fields
     axios
       .post(`http://127.0.0.1:5000/api/patients/new`, {
         patientEntry,
@@ -249,6 +259,7 @@ function Details({ patientID }: Props) {
 
   return (
     <>
+      {/* Tab buttons for existing/new patient */}
       <div className="row p-3">
         <ul className="nav nav-pills nav-fill">
           <li className="nav-item p-3">
@@ -278,6 +289,7 @@ function Details({ patientID }: Props) {
         </ul>
       </div>
 
+      {/* Start of existing patient tab */}
       {selectedTab === 1 ? (
         <div className="container-fluid">
           <div className="row">
@@ -294,6 +306,7 @@ function Details({ patientID }: Props) {
             </button>
           </div>
 
+          {/* Start of basic field elements */}
           <div className="row">
             <div className="col">
               <label>
@@ -379,6 +392,8 @@ function Details({ patientID }: Props) {
               value={patient.addresses.join("\n")}
             ></textarea>
           </div>
+
+          {/* Dynamically generate form elements for non-basic fields */}
           {extraFields.map((field) => (
             <div className="col">
               <label>
@@ -396,6 +411,8 @@ function Details({ patientID }: Props) {
             </div>
           ))}
           <br />
+
+          {/* Text area for new field-value pairs */}
           <div className="form-group">
             <label>
               <b>Enter New Fields:</b>
@@ -411,6 +428,8 @@ function Details({ patientID }: Props) {
             ></textarea>
           </div>
           <br />
+
+          {/* Display submit button only when form has been changed */}
           {changes && (
             <button
               className="btn btn-primary"
@@ -423,6 +442,8 @@ function Details({ patientID }: Props) {
         </div>
       ) : (
         <div className="container-fluid">
+          {/* Start of new patient tab */}
+          {/* Start of basic field elements */}
           <div className="row">
             <div className="col">
               <label>
@@ -507,6 +528,7 @@ function Details({ patientID }: Props) {
                 value={newPatient.addresses.join("\n")}
               ></textarea>
             </div>
+            {/* Dynamically generate non-basic form elements */}
             {extraFields.map((field) => (
               <div className="col">
                 <label>
@@ -527,6 +549,7 @@ function Details({ patientID }: Props) {
                 </div>
               </div>
             ))}
+            {/* New field text area */}
             <div className="form-group">
               <label>
                 <b>Enter New Fields:</b>

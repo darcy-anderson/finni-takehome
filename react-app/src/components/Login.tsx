@@ -12,11 +12,13 @@ import {
   StyledInput,
 } from "../commons";
 
+// Login interface
 function Login(props: any) {
   const [error, setError] = useState("");
   const signIn = useSignIn();
   const navigate = useNavigate();
 
+  // Send user login details for validation and receive token
   const onSubmit = async (values: any) => {
     console.log("Values: ", values);
     setError("");

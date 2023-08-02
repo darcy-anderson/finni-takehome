@@ -7,6 +7,7 @@ interface Props {
   noOfPages: number;
 }
 
+// Table displaying pages of 10 patients at a time
 function PatientTable({
   patients,
   onSelectPatient,
@@ -15,6 +16,7 @@ function PatientTable({
 }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
+  // Array of page numbers
   let pages = [];
   for (let i = 1; i <= noOfPages; i++) {
     pages.push(i);
@@ -50,6 +52,7 @@ function PatientTable({
         </tbody>
       </table>
 
+      {/*/ Dynamically generate page buttons */}
       <nav aria-label="Page navigation">
         <ul className="pagination justify-content-center">
           {pages.map((pageNo) => (

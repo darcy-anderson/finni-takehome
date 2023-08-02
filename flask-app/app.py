@@ -19,6 +19,7 @@ app.config['JWT_SECRET_KEY'] = 'your-secret-key'
 jwt = JWTManager(app)
 
 
+# Faciliate user login validation
 @app.route('/api/login', methods=['POST'])
 def login():
 
@@ -172,7 +173,7 @@ def create_patient():
   new_patient['patientID'] = get_next_patientID()
   new_fields = new_patient.pop('newPatientNewFields')
 
-  # Check if there are any new fields and format
+  # Check for new fields and format
   if 'value' in new_fields[0]:
     for new_field in new_fields:
       new_patient[new_field['field']] = new_field['value']
